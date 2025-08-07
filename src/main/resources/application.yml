@@ -1,0 +1,28 @@
+server:
+  port: 3020
+
+data-sources-config:
+  dataSources:
+    - name: postgres-db
+      strategy: postgres
+      url: ${POSTGRES_DATASOURCE_URL:jdbc:postgresql://localhost:5432/userdb}
+      table: USER_TABLE
+      user: testuser
+      password: testpass
+      mapping:
+        id: ID
+        username: LOGIN
+        name: FIRST_NAME
+        surname: LAST_NAME
+
+    - name: mysql-db
+      strategy: mysql
+      url: ${MYSQL_DATASOURCE_URL:jdbc:mysql://localhost:3306/userdb}
+      table: USER_TABLE
+      user: testuser
+      password: testpass
+      mapping:
+        id: ID
+        username: USERNAME
+        name: NAME
+        surname: SURNAME

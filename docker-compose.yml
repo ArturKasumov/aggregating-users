@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+
+  postgres-db:
+    image: postgres:15
+    container_name: postgres-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - aggregating-users-app-network
+
+  mysql-db:
+    image: mysql:8
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: userdb
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - aggregating-users-app-network
+
+  aggregating-users-ms:
+    container_name: aggregating-users-ms-container
+    image: aggregating-users-ms:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - 3020:3020
+    networks:
+      - aggregating-users-app-network
+    environment:
+      POSTGRES_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/userdb
+      MYSQL_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/userdb
+    depends_on:
+      - postgres-db
+      - mysql-db
+
+networks:
+  aggregating-users-app-network:
+    driver: bridge

@@ -1,0 +1,10 @@
+CREATE TABLE USER_TABLE (
+    ID SERIAL PRIMARY KEY,
+    LOGIN VARCHAR(100),
+    FIRST_NAME VARCHAR(100),
+    LAST_NAME VARCHAR(100)
+);
+
+INSERT INTO USER_TABLE (LOGIN, FIRST_NAME, LAST_NAME) VALUES
+('pg-user-1', 'Bernard', 'Chandler'),
+('pg-user-2', 'Mark', 'Arnold');
